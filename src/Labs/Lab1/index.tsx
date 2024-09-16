@@ -310,15 +310,12 @@ tag to tell browsers to render the gaps.
 
           Please
           <a id="wd-lipsum-doc" href="https://www.lipsum.com/feed/html"> click here </a>
-          to view the document<br/>
+          to view the inside document<br/>
       
           Please
           <a id="wd-github" href="https://github.com/JashuuQ/kanbas-react-web-app.git"> click here </a>
           to view my GitHub code repository
         </div>
-        
-
-
 
       </div>
     );
