@@ -24,18 +24,6 @@ export default function Kanbas() {
           </td>
         </tr>
       </table>
-      
-      <footer style={{
-        marginTop: "20px", 
-        padding: "10px", 
-        textAlign: "center", 
-        backgroundColor: "#f1f1f1",
-        fontSize: "14px",
-        color: "#555"
-      }}>
-        Created by <strong>Jiashu Qian</strong>
-      </footer>
-
     </div>
 
 );}
