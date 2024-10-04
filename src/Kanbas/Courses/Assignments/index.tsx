@@ -1,49 +1,100 @@
+import { BsGripVertical } from "react-icons/bs";
+import AssignmentsControls from "./AssignmentsControls";
+import LessonControlButtons from "../Modules/LessonControlButtons";
+import { FaRegFileAlt } from "react-icons/fa";
+import AssignmentControlButtons from "./AssignmentControlButtons";
+import { Link } from "react-router-dom";
+
 export default function Assignments() {
-    return (
-      <div id="wd-assignments">
-        <input id="wd-search-assignment"
-               placeholder="Search for Assignments" />
-        <button id="wd-add-assignment-group">+ Group</button>
-        <button id="wd-add-assignment">+ Assignment</button>
+  return (
+    <div className="container">
+      <br />
+      <AssignmentsControls />
 
-        <h3 id="wd-assignments-title">
-          ASSIGNMENTS 40% of Total <button>+</button>
-        </h3>
-
-        <ul id="wd-assignment-list">
-          {/* Assignment 1 */}
-          <li className="wd-assignment-list-item">
-            <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/123">
-              A1 - ENV + HTML
-            </a>
-            <div className="wd-assignment-details">
-              Multiple Modules | <span className="wd-assignment-status">
-                Not available until May 6 at 12:00am</span> | Due May 13 at 11:59pm | 100 pts
+      {/* Assignments */}
+      <ul id="wd-assignments" className="list-group rounded-0">
+        <li className="wd-assignment list-group-item p-0 mb-3 fs-5 border-gray">
+          {/* Align content horizontally */}
+          <div className="wd-title p-3 ps-2 bg-secondary d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center">
+              <BsGripVertical className="me-2 fs-3" />
+              <strong className="fs-4">ASSIGNMENTS</strong>
             </div>
-          </li>
+            <AssignmentControlButtons />
+          </div>
 
-          <li className="wd-assignment-list-item">
-            <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/124">
-              A2 - CSS + BOOTSTRAP
-            </a>
-            <div className="wd-assignment-details">
-              Multiple Modules | <span className="wd-assignment-status">
-                Not available until May 13 at 12:00am</span> | Due May 20 at 11:59pm | 100 pts
-            </div>
-          </li>
+          <ul className="wd-assignment-details list-group rounded-0">
+            {/* Assignment 1 */}
+            <li className="wd-detail
+                           list-group-item d-flex
+                           justify-content-between align-items-center p-3 ps-1">
+              <div className="d-flex align-items-center">
+                <BsGripVertical className="me-3 fs-3" />        
+                <FaRegFileAlt className="me-4 text-success" />  {/* Icon: file */}
+                <div>
+                  <strong className="fs-4">
+                    <Link to="./Ass1Editor">A1</Link>
+                  </strong>
+                  <div className="text-muted">
+                    <span className="text-danger">Multiple Modules </span> | 
+                    <span className="fw-bold"> Not available until</span> May 6 at 12:00am | 
+                    <br />
+                    <span className="fw-bold">Due</span> May 13 at 11:59pm | 100 pts
+                  </div>
+                </div>
+              </div>
+              <LessonControlButtons />
+            </li>
 
+            {/* Assignment 2 */}
+            <li className="wd-detail
+                           list-group-item d-flex
+                           justify-content-between
+                           align-items-center p-3 ps-1">
+              <div className="d-flex align-items-center">
+                <BsGripVertical className="me-3 fs-3" />        
+                <FaRegFileAlt className="me-4 text-success" />  {/* Icon: file */}
+                <div>
+                  <strong className="fs-4">
+                    <Link to="./Ass1Editor">A2</Link>    {/* Need to be polish */}
+                  </strong>
+                  <div className="text-muted">
+                    <span className="text-danger">Multiple Modules </span> | 
+                    <span className="fw-bold"> Not available until</span> May 13 at 12:00am | 
+                    <br />
+                    <span className="fw-bold">Due</span> May 20 at 11:59pm | 100 pts
+                  </div>
+                </div>
+              </div>
+              <LessonControlButtons />
+            </li>
 
-          <li className="wd-assignment-list-item">
-            <a className="wd-assignment-link" href="#/Kanbas/Courses/1234/Assignments/125">
-              A3 - JAVASCRIPT + REACT
-            </a>
-            <div className="wd-assignment-details">
-              Multiple Modules | <span className="wd-assignment-status">
-                Not available until May 20 at 12:00am</span> | Due May 27 at 11:59pm | 100 pts
-            </div>
-          </li>
-        </ul>
-      </div>
+            {/* Assignment 3 */}
+            <li className="wd-detail
+                           list-group-item d-flex
+                           justify-content-between
+                           align-items-center p-3 ps-1">
+              <div className="d-flex align-items-center">
+                <BsGripVertical className="me-3 fs-3" />        
+                <FaRegFileAlt className="me-4 text-success" />  {/* Icon: file */}
+                <div>
+                  <strong className="fs-4">
+                    <Link to="./Ass1Editor">A3</Link>    {/* Need to be polish */}
+                  </strong>
+                  <div className="text-muted">
+                    <span className="text-danger">Multiple Modules </span> | 
+                    <span className="fw-bold"> Not available until</span> May 20 at 12:00am | 
+                    <br />
+                    <span className="fw-bold">Due</span> May 27 at 11:59pm | 100 pts
+                  </div>
+                </div>
+              </div>
+              <LessonControlButtons />
+            </li>
 
-  );}
-  
+          </ul>
+        </li>
+      </ul>
+    </div>
+  );
+}
