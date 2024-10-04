@@ -7,4 +7,4 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - HW02 - Styling Web Pages with CSS
 
 
-Click here for the latest check! [MY Kanbas Online Systerm] (https://a2--webappbyjiashuqian.netlify.app/#/Labs/Lab1).
+Click here for the latest check! [MY Kanbas Online Systerm](https://a2--webappbyjiashuqian.netlify.app/#/Labs/Lab1).
