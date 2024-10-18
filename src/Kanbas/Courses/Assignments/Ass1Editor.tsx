@@ -1,7 +1,18 @@
 import { useState } from "react";
+import { useParams, Link } from 'react-router-dom';
+import * as db from "../../Database";
 
 export default function AssignmentEditor() {
+  const { assignmentID } = useParams();
+  const assignment = db.assignments.find(a => a._id === assignmentID);
   const [submissionType, setSubmissionType] = useState("online");
+
+  const cid = assignment ? assignment.course : null;
+
+  
+  if (!assignment) {
+    return <div>Assignment not found</div>;
+  }
 
   return (
     <div className="container mt-5">
@@ -12,7 +23,7 @@ export default function AssignmentEditor() {
           type="text" 
           id="assignmentName" 
           className="form-control" 
-          defaultValue="A1 - ENV + HTML"
+          defaultValue={assignment.title}
         />
       </div>
 
@@ -20,24 +31,7 @@ export default function AssignmentEditor() {
       <div className="mb-3">
         <label htmlFor="description" className="form-label">Description</label>
         <div className="border p-3">
-          <p>
-            The assignment is <span style={{ color: "red" }}>available online.</span>
-          </p>
-          <p>
-            Submit a link to the landing page of your Web application running on Netlify.
-          </p>
-          <p>
-            The landing page should include the following:
-          </p>
-          <ul>
-            <li>Your full name and section</li>
-            <li>Links to each of the Web modules</li>
-            <li>Links to the GitHub repositories</li>
-            <li>A link to your favorite exercise code repositories</li>
-          </ul>
-          <p>
-            The Kanban application should include a link to navigate back to the landing page.
-          </p>
+          <p>{assignment.description}</p>
         </div>
       </div>
 
@@ -51,7 +45,7 @@ export default function AssignmentEditor() {
             type="number"
             id="points"
             className="form-control"
-            defaultValue={100}
+            defaultValue={assignment.points}
           />
         </div>
       </div>
@@ -132,7 +126,6 @@ export default function AssignmentEditor() {
         </div>
       </div>
 
-
       {/* Assign Section */}
       <div className="row mb-3">
         <label className="col-sm-2 col-form-label text-end">Assign</label>
@@ -140,7 +133,7 @@ export default function AssignmentEditor() {
           
           {/* Assign to */}
           <div className="mb-3">
-            <label htmlFor="wd-assign-to" className="col-sm-2 col-form-label">
+            <label htmlFor="assignTo" className="col-sm-2 col-form-label">
               Assign to
             </label>
             <input 
@@ -159,7 +152,7 @@ export default function AssignmentEditor() {
                   type="datetime-local"
                   id="dueDate"
                   className="form-control"
-                  defaultValue="2024-05-13T23:59"
+                  defaultValue={assignment.dueDate}
                 />
             </div>
           </div>
@@ -172,7 +165,7 @@ export default function AssignmentEditor() {
                 type="datetime-local"
                 id="availableFrom"
                 className="form-control"
-                defaultValue="2024-05-06T23:59"
+                defaultValue={assignment.availableFrom}
               />
             </div>
 
@@ -186,15 +179,13 @@ export default function AssignmentEditor() {
             </div>
           </div>
 
-
-
         </div>
       </div>
 
       {/* Save and Cancel Buttons */}
       <div className="d-flex justify-content-end mt-3">
-        <button className="btn btn-secondary me-2">Cancel</button>
-        <button className="btn btn-success">Save</button>
+        <Link to={`/courses/${cid}/assignments`} className="btn btn-secondary me-2">Cancel</Link>
+        <Link to={`/courses/${cid}/assignments`} className="btn btn-success">Save</Link>
       </div>
     </div>
   );
