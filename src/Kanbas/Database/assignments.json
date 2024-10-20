@@ -21,8 +21,8 @@
       "_id": "CS5610-A3",
       "title": "Develop a Full Stack Web Application with Node.js",
       "course": "CS5610",
-      "dueDate": "May 13 at 11:59pm",
-      "availableFrom": "May 6 at 12:00am",
+      "dueDate": "May 27 at 11:59pm",
+      "availableFrom": "May 20 at 12:00am",
       "points": "100",
       "description": "Create a full stack app using Node.js and Express."
     },
@@ -50,7 +50,7 @@
       "title": "Optimize Database Performance with Indexing",
       "course": "CS5200",
       "dueDate": "May 27 at 11:59pm",
-      "availableFrom": "May 20 at 12:00pm",
+      "availableFrom": "May 20 at 12:00am",
       "points": "100",
       "description": "Use indexing techniques to improve database performance."
     },

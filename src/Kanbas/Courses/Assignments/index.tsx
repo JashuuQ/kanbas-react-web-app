@@ -42,7 +42,7 @@ export default function Assignments() {
                   <FaRegFileAlt className="me-4 text-success" />
                   <div>
                     <strong className="fs-4">
-                      <Link to={`/courses/${cid}/assignments/${assignment._id}`}>
+                      <Link to={`/Kanbas/Courses/${cid}/Assignments/${assignment._id}`}>
                         {assignment.title}
                       </Link>
                     </strong>

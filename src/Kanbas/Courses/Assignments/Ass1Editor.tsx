@@ -1,18 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from 'react-router-dom';
 import * as db from "../../Database";
 
 export default function AssignmentEditor() {
-  const { assignmentID } = useParams();
+  const { cid, assignmentID } = useParams();
   const assignment = db.assignments.find(a => a._id === assignmentID);
+
+  const [dueDate, setDueDate] = useState('');
+  const [availableFrom, setAvailableFrom] = useState('');
   const [submissionType, setSubmissionType] = useState("online");
 
-  const cid = assignment ? assignment.course : null;
+  // Function to convert "May 20 at 11:59pm" to "yyyy-MM-ddTHH:mm"
+  function formatDateToDateTimeLocal(dateString: string) {
+    const [monthDayPart, timePart] = dateString.split(" at ");
+    if (!monthDayPart || !timePart) return "";
+    
+    const date = new Date(`${monthDayPart} ${new Date().getFullYear()} ${timePart}`);
+    
+    if (!isNaN(date.getTime())) {
+      const year = date.getFullYear();
+      const month = (`0${date.getMonth() + 1}`).slice(-2);
+      const day = (`0${date.getDate()}`).slice(-2);
+      const hours = (`0${date.getHours()}`).slice(-2);
+      const minutes = (`0${date.getMinutes()}`).slice(-2);
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+    return "";
+  }
 
-  
+  // Set the dates after assignment is loaded
+  useEffect(() => {
+    if (assignment) {
+      setDueDate(formatDateToDateTimeLocal(assignment.dueDate));
+      setAvailableFrom(formatDateToDateTimeLocal(assignment.availableFrom));
+    }
+  }, [assignment]);
+
   if (!assignment) {
     return <div>Assignment not found</div>;
   }
+
 
   return (
     <div className="container mt-5">
@@ -23,7 +50,8 @@ export default function AssignmentEditor() {
           type="text" 
           id="assignmentName" 
           className="form-control" 
-          defaultValue={assignment.title}
+          value={assignment.title}
+          readOnly
         />
       </div>
 
@@ -45,7 +73,8 @@ export default function AssignmentEditor() {
             type="number"
             id="points"
             className="form-control"
-            defaultValue={assignment.points}
+            value={assignment.points}
+            readOnly
           />
         </div>
       </div>
@@ -140,7 +169,7 @@ export default function AssignmentEditor() {
               type="text"
               id="assignTo"
               className="form-control"
-              defaultValue="Everyone"
+              value="Everyone"
             />
           </div>
 
@@ -152,7 +181,8 @@ export default function AssignmentEditor() {
                   type="datetime-local"
                   id="dueDate"
                   className="form-control"
-                  defaultValue={assignment.dueDate}
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}  // change the format
                 />
             </div>
           </div>
@@ -165,7 +195,8 @@ export default function AssignmentEditor() {
                 type="datetime-local"
                 id="availableFrom"
                 className="form-control"
-                defaultValue={assignment.availableFrom}
+                value={availableFrom}
+                onChange={(e) => setAvailableFrom(e.target.value)} // change the format
               />
             </div>
 
@@ -184,8 +215,8 @@ export default function AssignmentEditor() {
 
       {/* Save and Cancel Buttons */}
       <div className="d-flex justify-content-end mt-3">
-        <Link to={`/courses/${cid}/assignments`} className="btn btn-secondary me-2">Cancel</Link>
-        <Link to={`/courses/${cid}/assignments`} className="btn btn-success">Save</Link>
+        <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">Cancel</Link>
+        <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-success">Save</Link>
       </div>
     </div>
   );
