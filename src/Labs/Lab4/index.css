@@ -1,0 +1,87 @@
+h5 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Style for the Counter */
+#wd-counter-up-click {
+    background-color: #1a951e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#wd-counter-down-click {
+    background-color: #be2c21;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#wd-counter-up-click:hover,
+#wd-counter-down-click:hover {
+    opacity: 0.9;
+}
+
+/* Style for the ArrayStateVariable button */
+#wd-add-element-click {
+    background-color: #1a951e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#wd-delete-element-click {
+    background-color: #be2c21;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 3px 8px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+#wd-array-state-variables button:hover {
+    opacity: 0.9;
+}
+
+/* Style for the Parent/Child State */
+#wd-increment-child-state-click {
+    background-color: #1a951e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+#wd-decrement-child-state-click {
+    background-color: #be2c21;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#wd-increment-child-state-click:hover,
+#wd-decrement-child-state-click:hover {
+    opacity: 0.9;
+}
