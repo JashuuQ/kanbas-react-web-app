@@ -9,6 +9,7 @@ import ParentStateComponent from "./ParentStateComponent";
 import PassingDataOnEvent from "./PassingDataOnEvent";
 import PassingFunctions from "./PassingFunctions";
 import StringStateVariables from "./StringStateVariables";
+import ReduxExamples from "./ReduxExamples";
 
 export default function Lab4() {
     function sayHello() {
@@ -24,7 +25,7 @@ export default function Lab4() {
             <PassingFunctions theFunction={sayHello} />
             <EventObject />
 
-        <h3> Manage Component State </h3>
+        <h3> Manage Component State: useState </h3>
             <Counter />
             <BooleanStateVariables />
             <StringStateVariables />
@@ -32,6 +33,9 @@ export default function Lab4() {
             <ObjectStateVariable />
             <ArrayStateVariable />
             <ParentStateComponent />
+        
+        <h3> Manage Application State: Redux </h3>
+            <ReduxExamples />
       </div>
     );
   }

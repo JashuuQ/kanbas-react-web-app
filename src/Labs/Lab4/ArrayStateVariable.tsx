@@ -13,7 +13,8 @@ export default function ArrayStateVariable() {
   return (
     <div id="wd-array-state-variables">
       <h5>Array State Variable</h5>
-      <button onClick={addElement} 
+      <button onClick={addElement}
+              className="button-common btn-green"
               id="wd-add-element-click">Add Element</button>
 
       <ul>
@@ -21,6 +22,7 @@ export default function ArrayStateVariable() {
           <li key={index}>
             {item}
             <button onClick={() => deleteElement(index)}
+                    className="button-common btn-red"
                     id="wd-delete-element-click">
               Delete</button>
           </li>
