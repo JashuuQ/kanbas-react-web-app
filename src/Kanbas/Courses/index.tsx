@@ -4,7 +4,7 @@ import Home from "./Home";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Ass1Editor";
 import { courses } from "../Database";
-import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
+import { Route, Routes, useParams, useLocation } from "react-router";
 import { FaAlignJustify } from "react-icons/fa";
 import Table from "./People/Table"; 
 
