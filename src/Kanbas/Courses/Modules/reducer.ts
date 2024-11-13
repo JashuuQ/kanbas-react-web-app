@@ -3,6 +3,7 @@ import { modules } from "../../Database";
 const initialState = {
   modules: modules,
 };
+
 const modulesSlice = createSlice({
   name: "modules",
   initialState,

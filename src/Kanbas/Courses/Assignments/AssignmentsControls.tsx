@@ -1,39 +1,52 @@
 import { BiSearch } from "react-icons/bi";
-import { MdAddCircleOutline } from "react-icons/md";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { MdAdd } from "react-icons/md";
+import { useNavigate, useParams } from "react-router";
+import { Link } from "react-router-dom";
 
-export default function AssignmentsControls() {
+export default function AssignmentControls() {
+  const navigate = useNavigate();
+  const { cid } = useParams(); // get the current id for the course
+
+  const handleAddAssignment = () => {
+    navigate(`/Kanbas/Courses/${cid}/Assignments/new`);
+  };
+  
   return (
     <div className="d-flex justify-content-between align-items-center mb-4">
-        <div className="position-relative" style={{ width: "300px" }}>
+      <div className="position-relative" style={{ width: "300px" }}>
+
         {/* Search */}
         <input
-            type="text"
-            placeholder="Search for Assignments..."
-            className="form-control"
-            style={{ paddingLeft: "2rem" }}
+          type="text"
+          placeholder="Search for Assignment"
+          className="form-control"
+          style={{ paddingLeft: "2rem" }}
         />
         <span
-            className="position-absolute"
-            style={{
+          className="position-absolute"
+          style={{
             left: "10px",
             top: "50%",
             transform: "translateY(-50%)",
             color: "#999",
-            }}
+          }}
         >
-            <BiSearch />
+          <BiSearch />
         </span>
-        </div>
-        
-        {/* Add Group & Assignment */}
-        <div className="d-flex">
-        <button className="btn btn-secondary me-2">
-            <MdAddCircleOutline /> Group
+      </div>
+      
+      {/* Add Assignment Button */}
+      <div className="d-flex">
+        <Link to={`/Kanbas/Courses/${cid}/Assignments/New`}
+              className="btn btn-danger d-flex align-items-center">
+          <MdAdd style={{ marginRight: "5px" }} /> Assignment
+        </Link>
+        <button className="btn btn-outline-secondary ms-2">
+          <BsThreeDotsVertical />
         </button>
-        <button className="btn btn-danger">
-            <MdAddCircleOutline /> Assignment
-        </button>
-        </div>
+      </div>
+      
     </div>
   );
 }

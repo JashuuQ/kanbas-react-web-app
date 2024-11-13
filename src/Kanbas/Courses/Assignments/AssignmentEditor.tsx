@@ -1,45 +1,64 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import * as db from "../../Database";
+import { addAssignment, updateAssignment } from "./reducer"; 
+import { useDispatch } from "react-redux";
 
 export default function AssignmentEditor() {
   const { cid, assignmentID } = useParams();
-  const assignment = db.assignments.find(a => a._id === assignmentID);
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [points, setPoints] = useState("");
   const [dueDate, setDueDate] = useState('');
   const [availableFrom, setAvailableFrom] = useState('');
+  const [availableUntil, setAvailableUntil] = useState('');
+  const [assignmentGroup, setAssignmentGroup] = useState("ASSIGNMENTS1");
   const [submissionType, setSubmissionType] = useState("online");
 
-  // Function to convert "May 20 at 11:59pm" to "yyyy-MM-ddTHH:mm"
-  function formatDateToDateTimeLocal(dateString: string) {
-    const [monthDayPart, timePart] = dateString.split(" at ");
-    if (!monthDayPart || !timePart) return "";
-    
-    const date = new Date(`${monthDayPart} ${new Date().getFullYear()} ${timePart}`);
-    
-    if (!isNaN(date.getTime())) {
-      const year = date.getFullYear();
-      const month = (`0${date.getMonth() + 1}`).slice(-2);
-      const day = (`0${date.getDate()}`).slice(-2);
-      const hours = (`0${date.getHours()}`).slice(-2);
-      const minutes = (`0${date.getMinutes()}`).slice(-2);
-      return `${year}-${month}-${day}T${hours}:${minutes}`;
-    }
-    return "";
-  }
-
-  // Set the dates after assignment is loaded
   useEffect(() => {
-    if (assignment) {
-      setDueDate(formatDateToDateTimeLocal(assignment.dueDate));
-      setAvailableFrom(formatDateToDateTimeLocal(assignment.availableFrom));
+    // Load assignment data if editing an existing assignment
+    if (assignmentID) {
+      const assignment = db.assignments.find(a => a._id === assignmentID);
+      if (assignment) {
+        setTitle(assignment.title);
+        setDescription(assignment.description);
+        setPoints(assignment.points);
+        setDueDate(assignment.dueDate);
+        setAvailableFrom(assignment.availableFrom);
+        setAvailableUntil(assignment.dueDate);
+      }
     }
-  }, [assignment]);
+  }, [assignmentID]);
 
-  if (!assignment) {
-    return <div>Assignment not found</div>;
-  }
+  const handleSave = () => {
+    const newAssignment = {
+      _id: assignmentID || new Date().getTime().toString(),
+      title,
+      description,
+      points,
+      dueDate,
+      availableFrom,
+      availableUntil,
+      assignmentGroup,
+      submissionType,
+      course: cid,
+    };
 
+    if (assignmentID) {
+      dispatch(updateAssignment(newAssignment));
+    } else {
+      dispatch(addAssignment(newAssignment));
+    }
+
+    navigate(`/Kanbas/Courses/${cid}/Assignments`);
+  };
+
+  const handleCancel = () => {
+    navigate(`/Kanbas/Courses/${cid}/Assignments`);
+  };
 
   return (
     <div className="container mt-5">
@@ -50,17 +69,20 @@ export default function AssignmentEditor() {
           type="text" 
           id="assignmentName" 
           className="form-control" 
-          value={assignment.title}
-          readOnly
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
       </div>
 
       {/* Description */}
       <div className="mb-3">
         <label htmlFor="description" className="form-label">Description</label>
-        <div className="border p-3">
-          <p>{assignment.description}</p>
-        </div>
+        <textarea 
+          id="description" 
+          className="form-control" 
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
       </div>
 
       {/* Points */}
@@ -73,8 +95,8 @@ export default function AssignmentEditor() {
             type="number"
             id="points"
             className="form-control"
-            value={assignment.points}
-            readOnly
+            value={points}
+            onChange={(e) => setPoints(e.target.value)}
           />
         </div>
       </div>
@@ -85,7 +107,12 @@ export default function AssignmentEditor() {
           Assignment Group
         </label>
         <div className="col-sm-10">
-          <select id="assignmentGroup" className="form-select">
+          <select
+            id="assignmentGroup"
+            className="form-select"
+            value={assignmentGroup}
+            onChange={(e) => setAssignmentGroup(e.target.value)}
+          >
             <option value="ASSIGNMENTS1">ASSIGNMENTS1</option>
             <option value="ASSIGNMENTS2">ASSIGNMENTS2</option>
             <option value="ASSIGNMENTS3">ASSIGNMENTS3</option>
@@ -155,68 +182,46 @@ export default function AssignmentEditor() {
         </div>
       </div>
 
-      {/* Assign Section */}
-      <div className="row mb-3">
-        <label className="col-sm-2 col-form-label text-end">Assign</label>
-        <div className="col-sm-10 fs-5">
-          
-          {/* Assign to */}
-          <div className="mb-3">
-            <label htmlFor="assignTo" className="col-sm-2 col-form-label">
-              Assign to
-            </label>
-            <input 
-              type="text"
-              id="assignTo"
-              className="form-control"
-              value="Everyone"
-            />
-          </div>
+      {/* Due Date */}
+      <div className="mb-3">
+        <label htmlFor="dueDate" className="form-label">Due Date</label>
+        <input 
+          type="datetime-local" 
+          id="dueDate" 
+          className="form-control" 
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
+      </div>
 
-          {/* Due Date */}        
-          <div className="mb-3">
-            <label htmlFor="wd-due-date">Due</label><br />
-            <div className="col-sm-10 text-end">
-                <input
-                  type="datetime-local"
-                  id="dueDate"
-                  className="form-control"
-                  value={dueDate}
-                  onChange={(e) => setDueDate(e.target.value)}  // change the format
-                />
-            </div>
-          </div>
-        
-          {/* Available from and Until */}
-          <div className="row mb-3">
-            <div className="col-sm-6 fs-5">
-              <label htmlFor="availableFrom" className="form-label">Available from</label>
-              <input
-                type="datetime-local"
-                id="availableFrom"
-                className="form-control"
-                value={availableFrom}
-                onChange={(e) => setAvailableFrom(e.target.value)} // change the format
-              />
-            </div>
+      {/* Available From */}
+      <div className="mb-3">
+        <label htmlFor="availableFrom" className="form-label">Available From</label>
+        <input 
+          type="datetime-local" 
+          id="availableFrom" 
+          className="form-control" 
+          value={availableFrom}
+          onChange={(e) => setAvailableFrom(e.target.value)}
+        />
+      </div>
 
-            <div className="col-sm-6">
-              <label htmlFor="availableUntil" className="form-label">Until</label>
-              <input
-                type="datetime-local"
-                id="availableUntil"
-                className="form-control"
-              />
-            </div>
-          </div>
-
-        </div>
+      {/* Available Until */}
+      <div className="mb-3">
+        <label htmlFor="availableUntil" className="form-label">Available Until</label>
+        <input 
+          type="datetime-local" 
+          id="availableUntil" 
+          className="form-control" 
+          value={availableUntil}
+          onChange={(e) => setAvailableUntil(e.target.value)}
+        />
       </div>
 
       {/* Save and Cancel Buttons */}
-      <div className="d-flex justify-content-end mt-3">
-        <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-secondary me-2">Cancel</Link>
-        <Link to={`/Kanbas/Courses/${cid}/Assignments`} className="btn btn-success">Save</Link>
+      <div className="d-flex justify-content-end mt-3"> 
+        <button onClick={handleCancel} className="btn btn-secondary me-2">Cancel</button>
+        <button onClick={handleSave} className="btn btn-success">Save</button>
       </div>
     </div>
   );
