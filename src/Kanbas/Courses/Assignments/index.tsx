@@ -13,6 +13,8 @@ export default function Assignments() {
   const { cid } = useParams();
   const dispatch = useDispatch();
   const assignments = useSelector((state: RootState) => state.assignments.assignments);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
 
   const courseAssignments = assignments.filter(
       (assignment: { course: string | undefined; }) => assignment.course === cid);
@@ -68,6 +70,7 @@ export default function Assignments() {
                 </div>
 
                 <div className="d-flex align-items-center ms-auto">
+                {currentUser.role === "FACULTY" && (
                   <button 
                     className="btn btn-danger btn-sm me-3"
                     onClick={() => handleDelete(assignment._id)}
@@ -75,8 +78,10 @@ export default function Assignments() {
                   >
                     <FaTrash />
                   </button>
-                  <LessonControlButtons />
-                </div>
+                )}
+                <LessonControlButtons />
+              </div>
+
 
               </li>
             ))}

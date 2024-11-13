@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import * as db from "./Database";
+import { useDispatch, useSelector } from "react-redux";
+import { enrollCourse, unenrollCourse } from "./Dashboard/reducer";
 
 interface DashboardProps {
   courses: any[];
@@ -19,29 +20,31 @@ export default function Dashboard({
   deleteCourse,
   updateCourse,
 }: DashboardProps) {
-  
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = db;
+  const enrolledCourses = useSelector((state: any) => state.enrollments.enrolledCourses);
+  const [showAllCourses, setShowAllCourses] = useState(false);
 
-  // check the status of login
+  // check if user is logged in
   if (!currentUser) {
     return <div>Loading...</div>;
   }
 
-  // filter the registered courses
-  const userCourses = courses.filter((course) =>
-    enrollments.some(
-      (enrollment) =>
-        enrollment.user === currentUser._id && enrollment.course === course._id
-    )
-  );
+  const handleToggleEnrollmentView = () => {
+    setShowAllCourses(!showAllCourses);
+  };
+
+  // filter courses based on enrollment for student view
+  const filteredCourses = showAllCourses
+    ? courses
+    : courses.filter((course) => enrolledCourses.includes(course._id));
 
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1>
       <hr />
 
-      {/* Only user = FACULTY */}
+      {/* faculty options for adding/updating courses */}
       {currentUser.role === "FACULTY" && (
         <>
           <h5>
@@ -76,10 +79,20 @@ export default function Dashboard({
         </>
       )}
 
-      <h2 id="wd-dashboard-published">Published Courses ({userCourses.length})</h2>
+      {/* enrollments button for students */}
+      {currentUser.role === "STUDENT" && (
+        <button
+          className="btn btn-primary float-end"
+          onClick={handleToggleEnrollmentView}
+        >
+          {showAllCourses ? "View My Enrollments" : "View All Courses"}
+        </button>
+      )}
+
+      <h2 id="wd-dashboard-published">Published Courses ({filteredCourses.length})</h2>
       <hr />
       <div id="wd-dashboard-courses" className="row row-cols-1 row-cols-md-5 g-4">
-        {userCourses.map((course) => (
+        {filteredCourses.map((course) => (
           <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>
             <div className="card rounded-3 overflow-hidden">
               <Link
@@ -93,6 +106,7 @@ export default function Dashboard({
                   height={160}
                   onError={(e) => { e.currentTarget.src = "/images/courses/cs0000.jpg"; }}
                 />
+                
                 <div className="card-body">
                   <h5 className="wd-dashboard-course-title card-title">{course.name}</h5>
                   <p className="wd-dashboard-course-description card-text" style={{ maxHeight: 100 }}>
@@ -102,7 +116,7 @@ export default function Dashboard({
                 </div>
               </Link>
               
-              {/* Only user = FACULTY */}
+              {/* faculty-only course management buttons */}
               {currentUser.role === "FACULTY" && (
                 <div className="card-footer">
                   <button
@@ -125,6 +139,33 @@ export default function Dashboard({
                   >
                     Edit
                   </button>
+                </div>
+              )}
+
+              {/* student-only enrollment buttons */}
+              {currentUser.role === "STUDENT" && (
+                <div className="card-footer">
+                  {enrolledCourses.includes(course._id) ? (
+                    <button
+                      className="btn btn-danger float-end"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        dispatch(unenrollCourse(course._id));
+                      }}
+                    >
+                      Unenroll
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-success float-end"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        dispatch(enrollCourse(course._id));
+                      }}
+                    >
+                      Enroll
+                    </button>
+                  )}
                 </div>
               )}
             </div>
