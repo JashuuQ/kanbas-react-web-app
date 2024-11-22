@@ -15,7 +15,6 @@ export default function Assignments() {
   const assignments = useSelector((state: RootState) => state.assignments.assignments);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
-
   const courseAssignments = assignments.filter(
       (assignment: { course: string | undefined; }) => assignment.course === cid);
 
