@@ -1,12 +1,15 @@
 import { BiSearch } from "react-icons/bi";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdAdd } from "react-icons/md";
+import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 
 export default function AssignmentControls() {
   const navigate = useNavigate();
-  const { cid } = useParams(); // get the current id for the course
+  const { cid } = useParams();  // get current id for the course
+  const currentUser = useSelector(
+    (state: any) => state.accountReducer.currentUser); // get current user
 
   const handleAddAssignment = () => {
     navigate(`/Kanbas/Courses/${cid}/Assignments/new`);
@@ -37,16 +40,19 @@ export default function AssignmentControls() {
       </div>
       
       {/* Add Assignment Button */}
-      <div className="d-flex">
-        <Link to={`/Kanbas/Courses/${cid}/Assignments/New`}
-              className="btn btn-danger d-flex align-items-center">
-          <MdAdd style={{ marginRight: "5px" }} /> Assignment
-        </Link>
-        <button className="btn btn-outline-secondary ms-2">
-          <BsThreeDotsVertical />
-        </button>
-      </div>
-      
+      {currentUser?.role === "FACULTY" && (
+        <div className="d-flex">
+          <Link
+            to={`/Kanbas/Courses/${cid}/Assignments/New`}
+            className="btn btn-danger d-flex align-items-center"
+          >
+            <MdAdd style={{ marginRight: "5px" }} /> Assignment
+          </Link>
+          <button className="btn btn-outline-secondary ms-2">
+            <BsThreeDotsVertical />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
