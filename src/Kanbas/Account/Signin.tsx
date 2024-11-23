@@ -5,15 +5,16 @@ import { useDispatch } from "react-redux";
 import * as db from "../Database";
 
 export default function Signin() {
-  
   const [credentials, setCredentials] = useState<any>({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const signin = () => {
     const user = db.users.find(
       (u: any) => u.username === credentials.username && u.password === credentials.password);
     if (!user) return;
-    dispatch(setCurrentUser(user));
+    
+    dispatch(setCurrentUser(user)); // store the user information
     navigate("/Kanbas/Dashboard");
   };
 
