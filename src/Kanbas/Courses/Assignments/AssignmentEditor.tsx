@@ -2,13 +2,17 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import * as db from "../../Database";
 import { addAssignment, updateAssignment } from "./reducer"; 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function AssignmentEditor() {
   const { cid, assignmentID } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
+  const currentUser = useSelector((
+    state: any) => state.accountReducer.currentUser);  // get current user role
+    const canEdit = currentUser?.role === "FACULTY" || currentUser?.role === "TA";
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [points, setPoints] = useState("");
@@ -18,8 +22,10 @@ export default function AssignmentEditor() {
   const [assignmentGroup, setAssignmentGroup] = useState("ASSIGNMENTS1");
   const [submissionType, setSubmissionType] = useState("online");
 
+
+
   useEffect(() => {
-    // Load assignment data if editing an existing assignment
+    // load assignment data if editing an existing assignment
     if (assignmentID) {
       const assignment = db.assignments.find(a => a._id === assignmentID);
       if (assignment) {
@@ -34,6 +40,8 @@ export default function AssignmentEditor() {
   }, [assignmentID]);
 
   const handleSave = () => {
+    if (!canEdit) return;  // prevent STUDENT from saving
+    
     const newAssignment = {
       _id: assignmentID || new Date().getTime().toString(),
       title,
@@ -59,6 +67,7 @@ export default function AssignmentEditor() {
   const handleCancel = () => {
     navigate(`/Kanbas/Courses/${cid}/Assignments`);
   };
+
 
   return (
     <div className="container mt-5">
@@ -219,9 +228,13 @@ export default function AssignmentEditor() {
       </div>
 
       {/* Save and Cancel Buttons */}
-      <div className="d-flex justify-content-end mt-3"> 
-        <button onClick={handleCancel} className="btn btn-secondary me-2">Cancel</button>
-        <button onClick={handleSave} className="btn btn-success">Save</button>
+      <div className="d-flex justify-content-end mt-3">
+        <button onClick={handleCancel} className="btn btn-secondary me-2">
+          {canEdit ? "Cancel" : "Back"}
+        </button>
+        {canEdit && (
+          <button onClick={handleSave} className="btn btn-success">Save</button>
+        )}
       </div>
     </div>
   );
