@@ -76,3 +76,8 @@ export const createCourse = async (course: Course): Promise<Course> => {
     throw error;
   }
 };
+
+export const findAllUsers = async (): Promise<User[]> => {
+  const response = await axiosWithCredentials.get(USERS_API);
+  return response.data as User[];
+};
