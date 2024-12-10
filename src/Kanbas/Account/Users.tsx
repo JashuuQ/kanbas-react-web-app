@@ -1,26 +1,55 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router";
+// import { useParams } from "react-router";
 import PeopleTable from "../Courses/People/Table";
 import * as client from "./client";
 import { User } from "../types";
 
 // Fetches the users from the database
 export default function Users() {
-  const [users, setUsers] = useState<any[]>([]);
-  const { uid } = useParams();
+  const [users, setUsers] = useState<User[]>([]);
+  const [role, setRole] = useState("");
+  // const { uid } = useParams();
   
-  const fetchUsers = async () => {
+  const filterUsersByRole = async (role: string) => {
+    setRole(role);
+    if (role) {
+      const users = await client.findUsersByRole(role);
+      setUsers(users);
+    } else {
+      fetchUsers();
+    }
+  };
+
+  const fetchUsers = async (): Promise<void> =>{
     const users = await client.findAllUsers();
+    console.log("Fetched users:", users);
     setUsers(users);
   };
 
   useEffect(() => {
     fetchUsers();
-  }, [uid]);
+  }, []); 
+
+  // useEffect(() => {
+  //   fetchUsers();
+  // }, [uid]);
 
   return (
     <div>
-      <h3>Users</h3>
+      <div className="user-container">
+        <h3>Users</h3>
+        <select
+          value={role}
+          onChange={(e) => filterUsersByRole(e.target.value)}
+          className="form-select float-start w-25 wd-select-role"
+        >
+          <option value="">All Roles</option>
+          <option value="STUDENT">Students</option>
+          <option value="TA">Assistants</option>
+          <option value="FACULTY">Faculty</option>
+          <option value="ADMIN">Administrators</option>
+        </select>
+      </div>
       <PeopleTable users={users} />
     </div>
   );

@@ -9,7 +9,7 @@ export default function AccountNavigation() {
   const links = currentUser
     ? [
       { name: "Profile", path: "/Kanbas/Account/Profile" },
-      { name: "Users", path: "/Kanbas/Account/User" },
+      // { name: "Users", path: "/Kanbas/Account/User" },
     ]
     : [
       { name: "Signin", path: "/Kanbas/Account/Signin" },
@@ -18,7 +18,31 @@ export default function AccountNavigation() {
 
   return (
     <div id="wd-account-navigation" className="list-group fs-5 rounded-0">
+      {/* general */}
       {links.map((link) => {
+        const isActive = pathname === link.path ? "active-link" : "inactive-link";
+        return (
+          <Link
+            key={link.name}
+            to={link.path}
+            className={`list-group-item border-0 ${isActive}`}
+          >
+            {link.name}
+          </Link>
+        );
+      })}
+
+      {currentUser && currentUser.role === "ADMIN" && (
+        <Link
+          to="/Kanbas/Account/Users"
+          className={`list-group-item ${pathname === "/Kanbas/Account/Users" ? "active-link" : "inactive-link"
+            }`}
+        >
+          Users
+        </Link>
+      )}
+
+      {/* {links.map((link) => {
         const isActive = pathname === link.path ? "active-link" : "inactive-link";
         {
           currentUser && currentUser.role === "ADMIN" && (
@@ -31,18 +55,18 @@ export default function AccountNavigation() {
             </Link>
           )
         }
-        
 
-        return (
-          <Link
-            key={link.name}
-            to={link.path}
-            className={`list-group-item border-0 ${isActive}`}
-          >
-            {link.name}
-          </Link>
-        );
-      })}
+
+      return (
+      <Link
+        key={link.name}
+        to={link.path}
+        className={`list-group-item border-0 ${isActive}`}
+      >
+        {link.name}
+      </Link>
+      );
+      })} */}
     </div>
   );
 }

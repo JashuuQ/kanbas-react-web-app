@@ -4,9 +4,10 @@ import { User, Course } from '../types';
 const axiosWithCredentials = axios.create({ withCredentials: true });
 
 export const REMOTE_SERVER = '';
+// export const REMOTE_SERVER = process.env.REACT_APP_REMOTE_SERVER;
 export const USERS_API = `${REMOTE_SERVER}/api/users`;
 
-// basic operations
+// Account
 export const signin = async (credentials: any): Promise<User> => {
   try {
     const response = await axiosWithCredentials.post<User>(
@@ -35,7 +36,15 @@ export const signout = async () => {
   return response.data;
 };
 
-// Account
+
+export const profile = async (): Promise<User | null> => {
+  const response = await axiosWithCredentials.post<User | null>(
+    `${USERS_API}/profile`
+  );
+  return response.data;
+};
+
+// Basic user operations
 export const updateUser = async (user: User): Promise<User> => {
   try {
     const response = await axiosWithCredentials.put<User>(
@@ -49,12 +58,19 @@ export const updateUser = async (user: User): Promise<User> => {
   }
 };
 
-export const profile = async (): Promise<User | null> => {
-  const response = await axiosWithCredentials.post<User | null>(
-    `${USERS_API}/profile`
-  );
-  return response.data;
+export const findAllUsers = async (): Promise<User[]> => {
+  const response = await axiosWithCredentials.get(USERS_API);
+  return response.data as User[];
 };
+
+
+export const findUsersByRole = async (role: string) : Promise<User[]> => {
+  const response = await axios.get(`${USERS_API}?role=${role}`);
+  console.log("API Response:", response.data);
+  return response.data as User[];
+};
+
+
 
 // Course
 export const findMyCourses = async (): Promise<Course[]> => {
@@ -77,7 +93,4 @@ export const createCourse = async (course: Course): Promise<Course> => {
   }
 };
 
-export const findAllUsers = async (): Promise<User[]> => {
-  const response = await axiosWithCredentials.get(USERS_API);
-  return response.data as User[];
-};
+

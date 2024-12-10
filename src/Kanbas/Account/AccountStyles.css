@@ -55,3 +55,10 @@ h1 {
     color: #0056b3;
     text-decoration: underline;
 }
+
+.user-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
