@@ -8,31 +8,71 @@ import "./styles.css";
 import Account from "./Account";
 import ProtectedRoute from "./Account/ProtectedRoute";
 
+
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>(db.courses);
   const [course, setCourse] = useState<any>({
-    _id: "0",
-    name: "New Course Name",
-    number: "New Number",
-    startDate: "2023-09-10",
-    endDate: "2023-12-15",
+    _id: "",
+    name: "",
+    number: "",
+    startDate: "",
+    endDate: "",
     image: "/images/courses/cs0000.jpg",
-    description: "New Description"
+    description: ""
   });
 
+  const resetCourse = () => {
+    setCourse({
+      _id: "",
+      name: "",
+      number: "",
+      startDate: "",
+      endDate: "",
+      image: "/images/courses/cs0000.jpg",
+      description: ""
+    });
+  };
+
+  const validateCourse = (course: any) => {
+    if (!course.name.trim() || !course.description.trim()) {
+      alert("Name and description cannot be empty.");
+      return false;
+    }
+    return true;
+  };
+  
   const addNewCourse = () => {
-    setCourses([...courses, { ...course, _id: new Date().getTime().toString() }]);
+    if (!validateCourse(course)) return;
+  
+    const newCourse = {
+      ...course,
+      _id: new Date().getTime().toString(),
+    };
+  
+    setCourses([...courses, newCourse]);
+    resetCourse();
   };
 
-  const deleteCourse = (courseId: any) => {
+  const deleteCourse = (courseId: string) => {
+    if (!window.confirm("Are you sure you want to delete the course?")) return;
     setCourses(courses.filter((course) => course._id !== courseId));
+      if (course._id === courseId) {
+      resetCourse();
+    }
+  };
+  
+  const updateCourse = () => {
+    if (!course.name) {
+      alert("Please select the course you want to edit.");
+      return;
+    }
+    if (!validateCourse(course)) return;
+    setCourses(
+      courses.map((c) => (c.name === course.name ? course : c))
+    );
+    resetCourse();
   };
 
-  const updateCourse = () => {
-    setCourses(
-      courses.map((c) => (c._id === course._id ? course : c))
-    );
-  };
 
   return (
     <div id="wd-kanbas">
