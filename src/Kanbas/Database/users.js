@@ -1,4 +1,4 @@
-[
+export default [
   {
     "_id": "123",
     "username": "fac1",

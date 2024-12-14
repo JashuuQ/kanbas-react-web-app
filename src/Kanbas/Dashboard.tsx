@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { enrollCourse, unenrollCourse } from "./Dashboard/reducer";
+import { enrollCourse, unenrollCourse } from "./reducer";
 
 interface DashboardProps {
   courses: any[];
@@ -21,22 +22,32 @@ export default function Dashboard({
 }: DashboardProps) {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const enrolledCourses = useSelector((state: any) => state.enrollments.enrolledCourses);
+
+  const [showAllCourses, setShowAllCourses] = useState(false);
+  const handleToggleEnrollmentView = () => {
+    setShowAllCourses(!showAllCourses);
+  };
 
   // check if user is logged in
   if (!currentUser) {
     return <div>Loading...</div>;
   }
 
+  // filter courses based on enrollment for student view
+  const filteredCourses = showAllCourses
+    ? courses
+    : courses.filter((course) => enrolledCourses.includes(course._id));
+
+
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1>
       <hr />
-
-      {/* Faculty options for adding/updating courses */}
+      {/* faculty options for adding/updating courses */}
       {currentUser.role === "FACULTY" && (
         <>
-          <h5>
-            New Course
+          <h5> New Course
             <button
               className="btn btn-primary float-end"
               id="wd-add-new-course-click"
@@ -54,23 +65,45 @@ export default function Dashboard({
           </h5>
           <hr />
           <input
-            defaultValue={course.name}
+            value={course.name}
             className="form-control mb-2"
             onChange={(e) => setCourse({ ...course, name: e.target.value })}
+            placeholder="Course Name"
           />
           <textarea
-            defaultValue={course.description}
+            value={course.description}
             className="form-control"
             onChange={(e) => setCourse({ ...course, description: e.target.value })}
+            placeholder="Course Description"
           />
           <br />
         </>
       )}
 
+      {/* enrollments button for students */}
+      {currentUser.role === "STUDENT" && (
+        <button
+          className="btn btn-primary float-end"
+          onClick={handleToggleEnrollmentView}
+        >
+          {showAllCourses ? "View My Enrollments" : "View All Courses"}
+        </button>
+      )}
+
       {/* Main Interface */}
-      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2>
+      <div className="d-flex justify-content-between align-items-center">
+        <h2 id="wd-dashboard-published" className="mb-0">
+          Published Courses ({filteredCourses.length})
+        </h2>
+        <button
+          className="btn btn-primary"
+          onClick={() => setShowAllCourses(!showAllCourses)}
+        >
+          {showAllCourses ? "View My Enrollments" : "View All Courses"}
+        </button>
+      </div>
       <hr />
-      
+
       <div id="wd-dashboard-courses" className="row row-cols-1 row-cols-md-5 g-4">
         {courses.map((course) => (
           <div key={course._id} className="wd-dashboard-course col" style={{ width: "300px" }}>

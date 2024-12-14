@@ -1,4 +1,4 @@
-[
+export default [
     { 
       "_id": "CS5610-A1", 
       "title": "Create a Responsive Portfolio Website",
